@@ -13,38 +13,50 @@ public class SlackJSONMsg {
     public String user;
     public String type;
     public String subtype;
-    public JSONArray reactions;
+    public JSONArray reactions = new JSONArray();
 
     SlackJSONMsg(JSONObject jMsg) {
         try {
             type = jMsg.getString("type");
 
-            if (type.equals("message")) {
+            if (jMsg.has("subtype")) {
                 subtype = jMsg.getString("subtype");
             } else {
                 subtype = "";
             }
 
             ts = jMsg.getString("ts");
-            user = jMsg.getString("user");
+
+            if ("bot_message".equals(subtype)) {
+                user = jMsg.getString("bot_id");
+            } else {
+                user = jMsg.getString("user");
+            }
 
             switch (type) {
                 case "file":
                     text = "";
-                    reactions = jMsg.getJSONObject("file").getJSONArray("reactions");
+                    if (jMsg.getJSONObject("file").has("reactions")) {
+                        reactions = jMsg.getJSONObject("file").getJSONArray("reactions");
+                    }
                     break;
                 case "message":
                     text = jMsg.getString("text");
-                    reactions = jMsg.getJSONArray("reactions");
+                    if (jMsg.has("reactions")) {
+                        reactions = jMsg.getJSONArray("reactions");
+                    }
                     break;
                 case "file_comment":
                     text = jMsg.getString("comment");
-                    jMsg.getJSONObject("comment").getJSONArray("reactions");
+                    if (jMsg.getJSONObject("comment").has("reactions")) {
+                        jMsg.getJSONObject("comment").getJSONArray("reactions");
+                    }
                     break;
             }
-            
-            if (jMsg.has("thread_ts")) thread_ts = jMsg.getString("thread_ts");
-            
+
+            if (jMsg.has("thread_ts")) {
+                thread_ts = jMsg.getString("thread_ts");
+            }
 
         } catch (JSONException ex) {
             throw new RuntimeException(ex);
