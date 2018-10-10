@@ -1,11 +1,13 @@
 package slackstats;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.util.Map;
 import java.io.IOException;
+import java.util.Scanner;
 
 import org.json.JSONObject;
 import org.json.JSONException;
@@ -21,8 +23,10 @@ class SlackData {
 
     private static final String BASE_URL = "https://jsab.slack.com/api/";
     private URL url;
+    private boolean DRYRUN;
 
-    SlackData(String method, Map<String, String> params) {
+    SlackData(String method, Map<String, String> params, boolean dryrun) {
+        DRYRUN = dryrun;
         buildURL(method, params);
         setData();
         channel = params.get("channel");
@@ -45,16 +49,22 @@ class SlackData {
         StringBuilder sb = new StringBuilder();
 
         try {
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            String line;
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-                while ((line = br.readLine()) != null) {
-                    sb.append(line);
-                }
+        
+            if (DRYRUN) {
+                raw = new Scanner(new File("slack-1.json")).useDelimiter("\\Z").next();
             }
-            conn.disconnect();
-            raw = sb.toString();
+            else {
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                String line;
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+                    while ((line = br.readLine()) != null) {
+                        sb.append(line);
+                    }
+                }
+                conn.disconnect();
+                raw = sb.toString();
+            }
             json = new JSONObject(raw);
             if (! json.has("messages")) System.out.println(raw);
             messages = json.getJSONArray("messages");

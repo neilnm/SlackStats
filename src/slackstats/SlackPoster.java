@@ -9,13 +9,20 @@ public class SlackPoster {
 
     private final String TOKEN;
     public final String CHANNEL;
+    private final boolean DRYRUN;
 
-    SlackPoster(String token, String channel) {
+    SlackPoster(String token, String channel, boolean dryrun) {
         TOKEN = token;
         CHANNEL = channel;
+        DRYRUN = dryrun;
     }
 
     void postToSlack(String messageToSlack) {
+        if (DRYRUN) {
+            System.out.println(messageToSlack);
+            return;
+        }
+        
         try {
             URL u = new URL("https://slack.com/api/chat.postMessage?");
             HttpURLConnection conn = (HttpURLConnection) u.openConnection();

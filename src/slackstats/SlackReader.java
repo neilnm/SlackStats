@@ -13,22 +13,27 @@ public class SlackReader {
 
     private final String TOKEN;
     public final String CHANNEL;
+    private final boolean DRYRUN;
 
-    SlackReader(String token, String channel) {
+    SlackReader(String token, String channel, boolean dryrun) {
         TOKEN = token;
         CHANNEL = channel;
+        DRYRUN = dryrun;
     }
 
     Iterable<SlackData> getLastWeekData() {
-        return new ChannelMessages(CHANNEL, TOKEN, 7*24);
+        return new ChannelMessages(CHANNEL, TOKEN, 7*24, DRYRUN);
     }
 
     public String getName(String user) {
+        if (DRYRUN) {
+            return "getName";
+        }
         String name = "";
         Map<String, String> params = new HashMap<>();
         params.put("token", TOKEN);
         params.put("user", user);
-        SlackData sb = new SlackData("users.info", params);
+        SlackData sb = new SlackData("users.info", params, DRYRUN);
 
         try {
             JSONObject json = sb.json.getJSONObject("user");
@@ -40,12 +45,16 @@ public class SlackReader {
     }
 
     public String getPermalink(String ts) {
+        if (DRYRUN) {
+            return "getPermalink";
+        }
+
         String permalink = "";
         Map<String, String> params = new HashMap<>();
         params.put("token", TOKEN);
         params.put("channel", CHANNEL);
         params.put("message_ts", ts);
-        SlackData sb = new SlackData("chat.getPermalink", params);
+        SlackData sb = new SlackData("chat.getPermalink", params, DRYRUN);
 
         try {
             permalink = sb.json.getString("permalink");
@@ -57,6 +66,10 @@ public class SlackReader {
 
     //get terminator/summonator name
     public String getLeaderName(String ts) {
+        if (DRYRUN) {
+            return "getLeaderName";
+        }
+
         String name = "";
         Map<String, String> params = new HashMap<>();
         params.put("token", TOKEN);
@@ -64,7 +77,7 @@ public class SlackReader {
         params.put("count", "1");
         params.put("latest", ts);
 
-        SlackData sd = new SlackData("channels.history", params);
+        SlackData sd = new SlackData("channels.history", params, DRYRUN);
         SlackJSONMsg jMsg = SlackJSONMsg.factory(sd.messages, 0);
         if (jMsg.text.contains("has left the channel")) {
             //handle if last message was in thread
@@ -87,16 +100,18 @@ class ChannelMessages implements Iterable<SlackData> {
     private final String CHANNEL;
     private final String TOKEN;
     private final long HOURS;
+    private final boolean DRYRUN;
 
-    ChannelMessages(String channel, String token, int hours) {
+    ChannelMessages(String channel, String token, int hours, boolean dryrun) {
         CHANNEL = channel;
         TOKEN = token;
         HOURS = (long) hours;
+        DRYRUN = dryrun;
     }
 
     @Override
     public Iterator<SlackData> iterator() {
-        return new SecretIterator();
+        return new SecretIterator(DRYRUN);
     }
 
     private class SecretIterator implements Iterator<SlackData> {
@@ -105,8 +120,10 @@ class ChannelMessages implements Iterable<SlackData> {
         String method = "channels.history";
         Map<String, String> params;
         long now;
+        boolean DRYRUN;
 
-        SecretIterator() {
+        SecretIterator(boolean dryrun) {
+            DRYRUN = dryrun;
             now = new Date().getTime() / 1000;
             this.params = new HashMap<>();
             this.params.put("token", TOKEN);
@@ -128,7 +145,7 @@ class ChannelMessages implements Iterable<SlackData> {
                 params.put("latest", getLastTS(last_slackdata.messages));
             }
 
-            last_slackdata = new SlackData(method, params);
+            last_slackdata = new SlackData(method, params, DRYRUN);
             return last_slackdata;
         }
 
