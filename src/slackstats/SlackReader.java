@@ -33,7 +33,7 @@ public class SlackReader {
         Map<String, String> params = new HashMap<>();
         params.put("token", TOKEN);
         params.put("user", user);
-        SlackData sb = new SlackData("users.info", params, DRYRUN);
+        SlackData sb = new SlackData("users.info", params);
 
         try {
             JSONObject json = sb.json.getJSONObject("user");
@@ -54,7 +54,7 @@ public class SlackReader {
         params.put("token", TOKEN);
         params.put("channel", CHANNEL);
         params.put("message_ts", ts);
-        SlackData sb = new SlackData("chat.getPermalink", params, DRYRUN);
+        SlackData sb = new SlackData("chat.getPermalink", params);
 
         try {
             permalink = sb.json.getString("permalink");
@@ -77,7 +77,7 @@ public class SlackReader {
         params.put("count", "1");
         params.put("latest", ts);
 
-        SlackData sd = new SlackData("channels.history", params, DRYRUN);
+        SlackData sd = new SlackData("channels.history", params);
         SlackJSONMsg jMsg = SlackJSONMsg.factory(sd.messages, 0);
         if (jMsg.text.contains("has left the channel")) {
             //handle if last message was in thread
@@ -145,7 +145,7 @@ class ChannelMessages implements Iterable<SlackData> {
                 params.put("latest", getLastTS(last_slackdata.messages));
             }
 
-            last_slackdata = new SlackData(method, params, DRYRUN);
+            last_slackdata = new SlackData(method, params);
             return last_slackdata;
         }
 

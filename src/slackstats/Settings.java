@@ -12,6 +12,7 @@ public class Settings {
     private static Settings instance;
     
     public String token;
+    public String baseURL;
     public String slackbotID;
     public List<String> slackChannels;
     public HashMap<String, Boolean> channelTermSumDo;
@@ -31,6 +32,7 @@ public class Settings {
         }
 
         token = prop.getProperty("token");
+        baseURL = prop.getProperty("base_url");
         isDryRun = Boolean.parseBoolean(prop.getProperty("dryrun"));
         slackbotID = prop.getProperty("slackbot_id");
         slackChannels = Arrays.<String>asList(prop.getProperty("channels").split(";"));

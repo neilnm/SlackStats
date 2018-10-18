@@ -21,12 +21,13 @@ class SlackData {
     public boolean has_more;
     public String channel;
 
-    private static final String BASE_URL = "https://jsab.slack.com/api/";
+    private String BASE_URL;
     private URL url;
     private boolean DRYRUN;
 
-    SlackData(String method, Map<String, String> params, boolean dryrun) {
-        DRYRUN = dryrun;
+    SlackData(String method, Map<String, String> params) {
+        DRYRUN = Settings.getInstance().isDryRun;
+        BASE_URL = Settings.getInstance().baseURL;
         buildURL(method, params);
         setData();
         channel = params.get("channel");
