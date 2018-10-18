@@ -15,10 +15,10 @@ public class SlackReader {
     public final String CHANNEL;
     private final boolean DRYRUN;
 
-    SlackReader(String token, String channel, boolean dryrun) {
-        TOKEN = token;
+    SlackReader(Settings settings, String channel) {
+        TOKEN = settings.token;
         CHANNEL = channel;
-        DRYRUN = dryrun;
+        DRYRUN = settings.usingFakeSlackData;
     }
 
     Iterable<SlackData> getLastWeekData() {
