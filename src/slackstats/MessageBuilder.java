@@ -14,7 +14,7 @@ public class MessageBuilder {
 
     MessageBuilder(Settings settings, String channel) {
         comm = new SlackReader(settings, channel);
-        useTermSum = useTermSum;
+        useTermSum = settings.channelTermSumDo.get(channel);
         fromChannel = channel;
     }
 

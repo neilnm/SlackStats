@@ -19,3 +19,5 @@ nb-configuration.xml
 
 # Private test-data
 slack-1.json
+summoners.txt
+terminators.txt
