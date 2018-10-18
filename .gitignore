@@ -17,3 +17,5 @@ nb-configuration.xml
 *.war
 *.ear
 
+# Private test-data
+slack-1.json
