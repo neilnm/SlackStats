@@ -37,6 +37,7 @@ public class Settings {
         slackbotID = prop.getProperty("slackbot_id");
         slackChannels = Arrays.<String>asList(prop.getProperty("channels").split(";"));
         
+        channelTermSumDo = new HashMap<>();
         for (String channel : slackChannels) {
             channelTermSumDo.put(channel, Boolean.parseBoolean(prop.getProperty(channel)));
         }
