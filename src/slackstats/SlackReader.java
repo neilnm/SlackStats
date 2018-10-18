@@ -22,7 +22,7 @@ public class SlackReader {
     }
 
     Iterable<SlackData> getLastWeekData() {
-        return new ChannelMessages(CHANNEL, TOKEN, 7*24, DRYRUN);
+        return new ChannelMessages(CHANNEL, TOKEN, 7*24);
     }
 
     public String getName(String user) {
@@ -100,18 +100,16 @@ class ChannelMessages implements Iterable<SlackData> {
     private final String CHANNEL;
     private final String TOKEN;
     private final long HOURS;
-    private final boolean DRYRUN;
 
-    ChannelMessages(String channel, String token, int hours, boolean dryrun) {
+    ChannelMessages(String channel, String token, int hours) {
         CHANNEL = channel;
         TOKEN = token;
         HOURS = (long) hours;
-        DRYRUN = dryrun;
     }
 
     @Override
     public Iterator<SlackData> iterator() {
-        return new SecretIterator(DRYRUN);
+        return new SecretIterator();
     }
 
     private class SecretIterator implements Iterator<SlackData> {
@@ -120,10 +118,8 @@ class ChannelMessages implements Iterable<SlackData> {
         String method = "channels.history";
         Map<String, String> params;
         long now;
-        boolean DRYRUN;
 
-        SecretIterator(boolean dryrun) {
-            DRYRUN = dryrun;
+        SecretIterator() {
             now = new Date().getTime() / 1000;
             this.params = new HashMap<>();
             this.params.put("token", TOKEN);
