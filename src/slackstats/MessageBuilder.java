@@ -12,13 +12,15 @@ public class MessageBuilder {
     boolean useTermSum;
     String fromChannel;
 
-    MessageBuilder(boolean useTermSum, SlackReader comm) {
-        this.comm = comm;
-        this.useTermSum = useTermSum;
-        this.fromChannel = comm.CHANNEL;
+    MessageBuilder(Settings settings, String channel) {
+        comm = new SlackReader(settings, channel);
+        useTermSum = settings.channelTermSumDo.get(channel);
+        fromChannel = channel;
     }
 
     String build() {
+        System.out.println("MessageBuilder: Starting to build output for " + fromChannel);
+
         StringBuilder slackMsg = new StringBuilder();
 
         slackMsg.append("<#").append(fromChannel)
@@ -39,7 +41,6 @@ public class MessageBuilder {
 
             }
         }
-        System.out.println("DONE!");
 
         if (useTermSum) slackMsg.append(termsum.buildOutput());
         slackMsg.append(wordcounter.buildOutput());
@@ -48,6 +49,7 @@ public class MessageBuilder {
 
         slackMsg.append("\n Source Code: https://github.com/neilnm/SlackStats");
 
+        System.out.println("MessageBuilder: Finished building output for " + fromChannel);
         return slackMsg.toString();
     }
 }

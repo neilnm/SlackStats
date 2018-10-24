@@ -21,12 +21,11 @@ class SlackData {
     public boolean has_more;
     public String channel;
 
-    private static final String BASE_URL = "https://jsab.slack.com/api/";
+    private Settings settings;
     private URL url;
-    private boolean DRYRUN;
 
-    SlackData(String method, Map<String, String> params, boolean dryrun) {
-        DRYRUN = dryrun;
+    SlackData(String method, Map<String, String> params) {
+        settings = Settings.getInstance();
         buildURL(method, params);
         setData();
         channel = params.get("channel");
@@ -38,7 +37,7 @@ class SlackData {
             parameters = parameters + p + "&";
         }
         try {
-            url = new URL(BASE_URL + method + "?" + parameters);
+            url = new URL(settings.baseURL + method + "?" + parameters);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -50,8 +49,8 @@ class SlackData {
 
         try {
         
-            if (DRYRUN) {
-                raw = new Scanner(new File("slack-1.json")).useDelimiter("\\Z").next();
+            if (settings.usingFakeSlackData) {
+                raw = new Scanner(new File(settings.fakeSlackDataFile)).useDelimiter("\\Z").next();
             }
             else {
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();

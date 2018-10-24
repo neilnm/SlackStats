@@ -7,20 +7,21 @@ import java.net.HttpURLConnection;
 
 public class SlackPoster {
 
-    private final String TOKEN;
     public final String CHANNEL;
-    private final boolean DRYRUN;
+    private final Settings SETTINGS;
 
-    SlackPoster(String token, String channel, boolean dryrun) {
-        TOKEN = token;
-        CHANNEL = channel;
-        DRYRUN = dryrun;
+    SlackPoster(Settings settings, String channel) {
+        if (settings.usingFakeMessageSink) CHANNEL = settings.fakeMessageSink;
+        else CHANNEL = channel;
+        SETTINGS = settings;
     }
 
     void postToSlack(String messageToSlack) {
-        if (DRYRUN) {
+        System.out.println("SlackPoster: Posting message to " + CHANNEL);
+
+        if (SETTINGS.fakeMessageSinkIsConsole) {
             System.out.println(messageToSlack);
-            return;
+            return; 
         }
         
         try {
@@ -28,7 +29,7 @@ public class SlackPoster {
             HttpURLConnection conn = (HttpURLConnection) u.openConnection();
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
-            String token = "token=" + TOKEN + "&";
+            String token = "token=" + SETTINGS.token + "&";
             String channel = "channel=" + CHANNEL + "&";
             String text = "text=" + messageToSlack + "&";
             String params = token + channel + text;
