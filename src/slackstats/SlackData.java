@@ -65,9 +65,10 @@ class SlackData {
                 raw = sb.toString();
             }
             json = new JSONObject(raw);
-            if (! json.has("messages")) System.out.println(raw);
-            messages = json.getJSONArray("messages");
-            has_more = json.getBoolean("has_more");
+            if (json.has("messages")) {
+                messages = json.getJSONArray("messages");
+                has_more = json.getBoolean("has_more");
+            }
         } catch (JSONException | IOException ex) {
             throw new RuntimeException(ex);
         }
