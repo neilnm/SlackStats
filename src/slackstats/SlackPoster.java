@@ -1,7 +1,9 @@
 package slackstats;
 
+import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.HttpURLConnection;
 
@@ -37,10 +39,22 @@ public class SlackPoster {
                 outStream.writeBytes(params);
                 outStream.flush();
             }
-            conn.getResponseCode();
+            debugHTTP(conn);
             conn.disconnect();
         } catch (IOException ex) {
             System.out.println(ex);
+        }
+    }
+    
+    static void debugHTTP(HttpURLConnection conn) throws IOException {
+        int respCode = conn.getResponseCode();
+        System.out.println("SlackPoster: Got code " + respCode + " and reponse body:");
+
+        if (respCode >= 200 && respCode <= 299) {
+            new BufferedReader(new InputStreamReader(conn.getInputStream())).lines().forEach(System.out::println);
+        }
+        else {
+            new BufferedReader(new InputStreamReader(conn.getErrorStream())).lines().forEach(System.out::println);
         }
     }
 }
