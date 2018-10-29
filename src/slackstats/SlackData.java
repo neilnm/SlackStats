@@ -65,6 +65,11 @@ class SlackData {
                 raw = sb.toString();
             }
             json = new JSONObject(raw);
+            
+            if (json.has("error")) {
+                throw new RuntimeException("Oh my, our Slack API call returned: " + raw);
+            }
+            
             if (json.has("messages")) {
                 messages = json.getJSONArray("messages");
                 has_more = json.getBoolean("has_more");
