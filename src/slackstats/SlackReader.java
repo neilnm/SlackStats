@@ -38,6 +38,9 @@ public class SlackReader {
         try {
             JSONObject json = sb.json.getJSONObject("user");
             name = json.getString("name");
+            if (name == "max.witt") {
+                name = "mr.andersson";
+            }
         } catch (JSONException ex) {
             throw new RuntimeException(ex);
         }

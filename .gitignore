@@ -9,6 +9,9 @@ nbdist/
 nbactions.xml
 nb-configuration.xml
 
+# IntelliJ specific #
+.idea/
+
 # Class Files #
 *.class
 
