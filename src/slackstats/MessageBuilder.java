@@ -5,6 +5,7 @@ import slackstats.plugins.Plugin;
 import slackstats.plugins.WordCounter;
 import slackstats.plugins.TerminatorSummoner;
 import slackstats.plugins.ReactionCounter;
+import slackstats.plugins.Cricketeering;
 
 public class MessageBuilder {
 
@@ -30,6 +31,7 @@ public class MessageBuilder {
         Plugin wordcounter = new WordCounter();
         Plugin babblers = new Babblers(comm);
         Plugin reactions = new ReactionCounter(comm);
+        Plugin cricketeering = new Cricketeering();
 
         for (SlackData sd : comm.getLastWeekData()) {
             for (int i = 0; i < sd.messages.length(); i++) {
@@ -37,6 +39,7 @@ public class MessageBuilder {
                 wordcounter.update(jMsg);
                 babblers.update(jMsg);
                 reactions.update(jMsg);
+                cricketeering.update(jMsg);
                 if (useTermSum) termsum.update(jMsg);
 
             }
@@ -46,6 +49,7 @@ public class MessageBuilder {
         slackMsg.append(wordcounter.buildOutput());
         slackMsg.append(babblers.buildOutput());
         slackMsg.append(reactions.buildOutput());
+        slackMsg.append(cricketeering.buildOutput());
 
         slackMsg.append("\n Source Code: https://github.com/neilnm/SlackStats");
 

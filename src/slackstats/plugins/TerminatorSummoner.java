@@ -12,7 +12,7 @@ import java.util.Scanner;
 import slackstats.SlackReader;
 import slackstats.SlackJSONMsg;
 import static slackstats.Util.sortMap;
-import static slackstats.plugins.Util.rankToEmoji;
+import static slackstats.plugins.Util.buildRankOutput;
 
 public class TerminatorSummoner implements Plugin {
 
@@ -161,7 +161,7 @@ public class TerminatorSummoner implements Plugin {
 
         StringBuilder sb = new StringBuilder();
         sb.append(":terminator: *Top 3 Terminators* (measured since May 2017)\n");
-        sb.append(buildRankOutput(terminatorsMap, terminatorOri));
+        sb.append(buildRankOutput(terminatorsMap, terminatorOri, "points", 3));
         sb.append("Terminator: A person whose post made a boring person leave <#");
         sb.append(comm.CHANNEL);
         sb.append("> (1 point per post)\n\n");
@@ -173,32 +173,10 @@ public class TerminatorSummoner implements Plugin {
 
         StringBuilder sb = new StringBuilder();
         sb.append(":summoner: *Top 3 Summoners* (measured since May 2017)\n");
-        sb.append(buildRankOutput(summonersMap, summonersOri));
+        sb.append(buildRankOutput(summonersMap, summonersOri, "points", 3));
         sb.append("Summoner: A person whose post made a new Randomer magically appear in <#");
         sb.append(comm.CHANNEL);
         sb.append("> (1 point per post)\n\n");
-        return sb.toString();
-    }
-
-    private String buildRankOutput(Map<String, Integer> scoreMap, Map<String, Integer> oriMap) {
-        //print Summoners
-        StringBuilder sb = new StringBuilder();
-
-        int index = 1;
-        for (Map.Entry<String, Integer> entry : scoreMap.entrySet()) {
-            if (index == 4) break;
-            String rank = rankToEmoji.get(index);
-            int total = entry.getValue();
-            int ori = 0;
-            if (oriMap.get(entry.getKey()) != null) {
-                ori = oriMap.get(entry.getKey());
-            }
-            int diff = total - ori;
-            sb.append(rank).append("<@").append(entry.getKey()).append("> *")
-                    .append(entry.getValue()).append(" points* ")
-                    .append("%2B").append(diff).append("\n");
-            index++;
-        }
         return sb.toString();
     }
 
