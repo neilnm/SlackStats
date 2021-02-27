@@ -204,7 +204,7 @@ public class TerminatorSummoner implements Plugin {
 
     private void writeMapToFile(String filename, Map<String, Integer> map) {
         try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(filename)))) {
-            for (Map.Entry entry : map.entrySet()) {
+            for (Map.Entry<String, Integer> entry : map.entrySet()) {
                 pw.println(entry.getKey() + ";" + entry.getValue());
             }
         } catch (IOException ex) {

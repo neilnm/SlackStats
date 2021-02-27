@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import slackstats.SlackJSONMsg;
-import static slackstats.plugins.Util.rankToEmoji;
 
 public class Cricketeering implements Plugin {
 

@@ -31,7 +31,7 @@ public class Babblers implements Plugin {
         StringBuilder sb = new StringBuilder(":talking: *Last Week's Top 3 Babblers*\n");
         
         int index = 1;
-        for (Map.Entry u : result.entrySet()) {
+        for (Map.Entry<String, Integer> u : result.entrySet()) {
             if (index == 4) break;
             String rank = rankToEmoji.get(index);
 

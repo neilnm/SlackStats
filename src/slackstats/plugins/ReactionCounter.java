@@ -25,7 +25,7 @@ public class ReactionCounter implements Plugin{
         StringBuilder sb = new StringBuilder("\n :aw_yeah: *Last Week's Top 3 messages with most reactions*\n");
 
         int index = 1;
-        for (Map.Entry u : result.entrySet()) {
+        for (Map.Entry<String, String[]> u : result.entrySet()) {
             if (index == 4) break;
             String rank = rankToEmoji.get(index);
 

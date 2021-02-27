@@ -52,7 +52,7 @@ public class WordCounter implements Plugin {
         sb.append(":word: *Last Week's Top 3 Words (5 letters or more)*\n");
         
         int index = 1;
-        for (Map.Entry top_word : result.entrySet()) {
+        for (Map.Entry<String, Integer> top_word : result.entrySet()) {
             if (index == 4) break;
             String rank = rankToEmoji.get(index);
             sb.append(rank).append(top_word).append("\n");

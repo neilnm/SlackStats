@@ -49,8 +49,11 @@ class SlackData {
 
         try {
         
-            if (settings.usingFakeSlackData) {
-                raw = new Scanner(new File(settings.fakeSlackDataFile)).useDelimiter("\\Z").next();
+            if (settings.usingFakeSlackData) {                
+                Scanner scanner = new Scanner(new File(settings.fakeSlackDataFile));
+                try(scanner){
+                    raw = scanner.useDelimiter("\\Z").next();
+                }
             }
             else {
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
