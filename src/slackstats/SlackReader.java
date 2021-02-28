@@ -77,7 +77,7 @@ public class SlackReader {
         params.put("count", "1");
         params.put("latest", ts);
 
-        SlackData sd = new SlackData("channels.history", params);
+        SlackData sd = new SlackData("conversations.history", params);
         SlackJSONMsg jMsg = SlackJSONMsg.factory(sd.messages, 0);
         if (jMsg.text.contains("has left the channel")) {
             //handle if last message was in thread
@@ -115,7 +115,7 @@ class ChannelMessages implements Iterable<SlackData> {
     private class SecretIterator implements Iterator<SlackData> {
 
         SlackData last_slackdata = null;
-        String method = "channels.history";
+        String method = "conversations.history";
         Map<String, String> params;
         long now;
 
