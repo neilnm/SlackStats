@@ -30,11 +30,9 @@ public class WordCounter implements Plugin {
         String[] tmpWords = jMsg.text.split(" ");
         //adding five letter words
         for (String s : tmpWords) {
-            String sClean = s.replaceAll("[\\.:<>,()?!'*\"“”_]", "");
+            String sClean = s.replaceAll("(\\&amp;|\\n\\&gt|[\\.:<>,()?!'*\"“”_])", "");
             sClean = sClean.toLowerCase();
-            //special case (html reference &amp;)
-            sClean = sClean.replace("amp;", "");
-
+            
             if (sClean.length() > 4 && !forbiddenWords.contains(sClean)) {
                 if (!s.matches("[<].{0,}[>]") && !s.contains("http")
                         && !s.matches("[:].{0,}[:]")) {
