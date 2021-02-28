@@ -43,8 +43,11 @@ public class ReactionCounter implements Plugin{
     @Override
     public void update(SlackJSONMsg jMsg) {
         int totalReact = 0;
-        try {
-            for (int j = 0; j < jMsg.reactions.length(); j++) {
+        try {            
+            for (int j = 0; j < jMsg.reactions.length(); j++) {                
+                if(jMsg.text.contains("Polly!")){
+                    continue;
+                }
                 String reactCount = ((JSONObject) jMsg.reactions.get(j)).get("count").toString();
                 totalReact += Integer.parseInt(reactCount);
             }
